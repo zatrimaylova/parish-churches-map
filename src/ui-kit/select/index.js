@@ -14,30 +14,35 @@ const OPTIONS = [
     key: 'Select city',
     lat: null,
     long: null,
+    id: 0,
   },
   {
     label: 'New York',
     key: 'New York',
     lat: 40.73061,
     long: -73.935242,
+    id: 1,
   },
   {
     label: 'Chicago',
     key: 'Chicago',
     lat: 41.881832,
     long: -87.623177,
+    id: 2,
   },
   {
     label: 'Boston',
     key: 'Boston',
     lat: 42.361145,
     long: -71.057083,
+    id: 3,
   },
   {
     label: 'Oakland',
     key: 'Oakland',
     lat: 37.804363,
     long: -122.271111,
+    id: 4,
   },
 ];
 
@@ -56,7 +61,7 @@ const Select = (props) => {
   return (
     <div id="select-root" disabled={props.disabled}>
       <select
-        value={props.value || 'Select city'}
+        value={props.value || 0}
         disabled={props.disabled}
         onChange={handleChange}
         onFocus={() => setIsFocused(!isFocused)}
@@ -65,7 +70,7 @@ const Select = (props) => {
         {Array.isArray(actualArray) &&
           actualArray.length !== 0 &&
           actualArray.map((item) => (
-            <option value={item.key} key={item.key}>
+            <option value={item.id} key={item.key}>
               {item.label}
             </option>
           ))}
