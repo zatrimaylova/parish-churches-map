@@ -1,0 +1,26 @@
+.btn-root {
+  border: none;
+  height: fit-content;
+  border-radius: 64px;
+  overflow: hidden;
+  display: inline-flex;
+  position: relative;
+  cursor: pointer;
+  outline: none;
+  transition: 0.2s;
+  display: flex;
+  gap: 8px;
+  background: #18333E;
+  border-radius: 20px;
+  color: #FFFFFF;
+  padding: 10px 32px;
+
+  span {
+    letter-spacing: 1.2px;
+    text-transform: capitalize;
+    font-size: 16px;
+    //font-family: 'Inika', sans-serif;
+    font-style: normal;
+    font-weight: 400;
+  }
+}
