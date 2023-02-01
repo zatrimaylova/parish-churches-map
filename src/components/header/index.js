@@ -2,15 +2,15 @@
  * @prettier
  */
 
-import React, { useState } from 'react';
+import React from 'react';
 
 import './styles.scss';
 
 import Icon from '../../ui-kit/icon';
 import Select from '../../ui-kit/select';
 
-const Header = () => {
-  const [currentCity, setCurrentCity] = useState(0);
+const Header = (props) => {
+  //const [currentCity, setCurrentCity] = useState(0);
 
   return (
     <header id="header-root">
@@ -23,7 +23,11 @@ const Header = () => {
         </div>
       </div>
       <div className="city">
-        <Select value={currentCity} onChange={setCurrentCity} />
+        <Select
+          value={props.currentCity}
+          onChange={props.setCurrentCity}
+          options={props.citiesList}
+        />
       </div>
     </header>
   );
