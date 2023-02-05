@@ -54,10 +54,37 @@ const MainPage = () => {
     try {
       const result = await ChurchesListService.getChurchesListData(lat, long);
 
-      console.log(result);
+      const listToStore = editChurchesList(result);
+
+      dispatch({ type: 'ADD_CHURCHES_lIST', payload: listToStore });
     } catch {
       return Promise.reject();
     }
+  };
+
+  const editChurchesList = (list) => {
+    const editedList = list.reduce((resultList, church) => {
+      const churchData = {
+        name: church.name,
+        url: church.url,
+        address: {
+          providence: church.church_address_providence_name,
+          detailedAddress: church.church_address_street_address,
+          directions: church.directions,
+        },
+        latitude: church.latitude,
+        longitude: church.longitude,
+        id: church.id,
+        phone: church.phone_number,
+        pastorsName: church.pastors_name,
+      };
+
+      resultList.push(churchData);
+
+      return resultList;
+    }, []);
+
+    return editedList;
   };
 
   const dispatch = useDispatch();
