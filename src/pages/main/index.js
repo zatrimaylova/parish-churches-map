@@ -2,12 +2,12 @@
  * @prettier
  */
 import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 
 import Header from '../../components/header';
+import './styles.scss';
 
 import ChurchesListService from '../../services/churches';
-
-import './styles.scss';
 
 const OPTIONS = [
   {
@@ -48,7 +48,7 @@ const OPTIONS = [
 ];
 
 const MainPage = () => {
-  const [currentCity, setCurrentCity] = useState(0);
+  const [currentCity, setCurrentCity] = useState(useSelector((store) => store.city));
 
   const getData = async (lat, long) => {
     try {
@@ -60,11 +60,15 @@ const MainPage = () => {
     }
   };
 
+  const dispatch = useDispatch();
+
   useEffect(() => {
-    if (currentCity) {
+    if (Number(currentCity)) {
       const city = OPTIONS.find((el) => el.id === Number(currentCity));
       getData(city.lat, city.long);
+      dispatch({ type: 'CHANGE_CITY', payload: Number(currentCity) });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentCity]);
 
   return (

@@ -1,13 +1,11 @@
-const defaultState = {
-  city: null,
-};
+const defaultState = 0;
 
 const CHANGE_CITY = 'CHANGE_CITY';
 
 export const cityReducer = (state = defaultState, action) => {
   switch (action.type) {
     case CHANGE_CITY:
-      return { ...state, city: action.payload };
+      return action.payload;
     default:
       return state;
   }
