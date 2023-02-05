@@ -1,6 +1,4 @@
-const defaultState = {
-  churches: [],
-};
+const defaultState = [];
 
 const ADD_CHURCHES = 'ADD_CHURCHES_lIST';
 
