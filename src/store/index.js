@@ -8,4 +8,7 @@ const rootReducers = combineReducers({
   churchesList: churchesListReducer,
 });
 
-export const store = createStore(rootReducers);
+const ext = window.__REDUX_DEVTOOLS_EXTENSION__;
+const devtoolMiddleware = ext && process.env.NODE_ENV === 'development';
+
+export const store = createStore(rootReducers, devtoolMiddleware && ext());
