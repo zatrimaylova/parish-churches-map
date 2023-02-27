@@ -3,8 +3,10 @@
  */
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import Map from 'react-map-gl';
 
 import Header from '../../components/header';
+import Marker from '../../ui-kit/marker';
 import './styles.scss';
 
 import ChurchesListService from '../../services/churches';
@@ -47,8 +49,22 @@ const OPTIONS = [
   },
 ];
 
+const REACT_APP_MAPBOX_ACCESS_TOKEN =
+  'pk.eyJ1IjoibWFyaWEwMDAwMSIsImEiOiJjbGUxNTdwMGgwanR2M29wNW52aGw5bDhwIn0.chHIxeasZgfo26KK70LjlA';
+
+const mapStyles = {
+  width: '100vw',
+  height: '100vh',
+};
+
 const MainPage = () => {
   const [currentCity, setCurrentCity] = useState(useSelector((store) => store.city));
+
+  const [viewPort, setViewPort] = useState({
+    latitude: 39.4408671,
+    longitude: -99.5510316,
+    zoom: 10,
+  });
 
   const getData = async (lat, long) => {
     try {
@@ -88,12 +104,18 @@ const MainPage = () => {
   };
 
   const dispatch = useDispatch();
+  console.log(viewPort);
 
   useEffect(() => {
     if (Number(currentCity)) {
       const city = OPTIONS.find((el) => el.id === Number(currentCity));
       getData(city.lat, city.long);
       dispatch({ type: 'CHANGE_CITY', payload: Number(currentCity) });
+      setViewPort({
+        latitude: city.lat,
+        longitude: city.long,
+        zoom: 10,
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentCity]);
@@ -101,6 +123,20 @@ const MainPage = () => {
   return (
     <div id="main-page">
       <Header currentCity={currentCity} setCurrentCity={setCurrentCity} citiesList={OPTIONS} />
+      <Map
+        // {...viewPort}
+        mapboxAccessToken={REACT_APP_MAPBOX_ACCESS_TOKEN}
+        style={mapStyles}
+        mapStyle="mapbox://styles/mapbox/streets-v9"
+        // onViewportChange={(viewport) => {
+        //   console.log(viewport);
+        //   setViewPort(viewport);
+        // }}
+        initialViewState={viewPort}
+      >
+        Maaaaaaaaap
+        <Marker />
+      </Map>
     </div>
   );
 };
