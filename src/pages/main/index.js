@@ -3,10 +3,10 @@
  */
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import Map from 'react-map-gl';
+import Map, { NavigationControl } from 'react-map-gl';
 
 import Header from '../../components/header';
-import Marker from '../../ui-kit/marker';
+//import Marker from '../../ui-kit/marker';
 import './styles.scss';
 
 import ChurchesListService from '../../services/churches';
@@ -50,12 +50,12 @@ const OPTIONS = [
 ];
 
 const REACT_APP_MAPBOX_ACCESS_TOKEN =
-  'pk.eyJ1IjoibWFyaWEwMDAwMSIsImEiOiJjbGUxNTdwMGgwanR2M29wNW52aGw5bDhwIn0.chHIxeasZgfo26KK70LjlA';
+  'pk.eyJ1IjoibWFyaWEwMDAwMSIsImEiOiJjbGVuODN1Ym0wNHQ1M3RwYWIwaG9wZ282In0.mNhGxXBnFDmEd0lvjm2LtQ';
 
-const mapStyles = {
-  width: '100vw',
-  height: '100vh',
-};
+// const mapStyles = {
+//   width: '100vw',
+//   height: '100vh',
+// };
 
 const MainPage = () => {
   const [currentCity, setCurrentCity] = useState(useSelector((store) => store.city));
@@ -63,8 +63,16 @@ const MainPage = () => {
   const [viewPort, setViewPort] = useState({
     latitude: 39.4408671,
     longitude: -99.5510316,
-    zoom: 10,
+    //...mapStyles,
   });
+
+  const mapRef = React.useRef();
+
+  const onMapLoad = React.useCallback(() => {
+    mapRef.current.on('move', () => {
+      // do something
+    });
+  }, []);
 
   const getData = async (lat, long) => {
     try {
@@ -104,7 +112,7 @@ const MainPage = () => {
   };
 
   const dispatch = useDispatch();
-  console.log(viewPort);
+  //console.log(viewPort);
 
   useEffect(() => {
     if (Number(currentCity)) {
@@ -114,28 +122,72 @@ const MainPage = () => {
       setViewPort({
         latitude: city.lat,
         longitude: city.long,
-        zoom: 10,
+        //zoom: 10,
+        //...mapStyles,
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentCity]);
 
+  // const onMove = (newView) => {
+  //   setTimeout(() => {
+  //     setViewPort({
+  //       //...newView,
+  //       latitude: newView.viewState.latitude,
+  //       longitude: newView.viewState.longitude,
+  //       ...mapStyles,
+  //       zoom: 10,
+  //     });
+  //   }, [100]);
+  //   //setViewPort({ ...newView, ...viewPort });
+  // };
+
+  const onDrag = (newView) => {
+    setTimeout(() => {
+      setViewPort({
+        latitude: newView.viewState.latitude,
+        longitude: newView.viewState.longitude,
+      });
+    }, [100]);
+    //setViewPort({ ...newView, ...viewPort });
+  };
+
+  console.log(viewPort);
+
   return (
     <div id="main-page">
       <Header currentCity={currentCity} setCurrentCity={setCurrentCity} citiesList={OPTIONS} />
       <Map
-        // {...viewPort}
         mapboxAccessToken={REACT_APP_MAPBOX_ACCESS_TOKEN}
-        style={mapStyles}
+        //style={mapStyles}
         mapStyle="mapbox://styles/mapbox/streets-v9"
-        // onViewportChange={(viewport) => {
-        //   console.log(viewport);
-        //   setViewPort(viewport);
+        //initialViewState={viewPort}
+        {...viewPort}
+        ref={mapRef}
+        onLoad={onMapLoad}
+        initialViewState={{ zoom: 10 }}
+        onDrag={onDrag}
+        //showZoom={true}
+        //showCompass={true}
+        //viewState={viewPort}
+        // onViewPortChange={(newView) => {
+        //   console.log('wdjwiujdciuwehjnxoljks');
+        //   setViewPort(newView);
         // }}
-        initialViewState={viewPort}
+        // onMove={(newView) => {
+        //   console.log('wdjwiujdciuwehjnxoljks');
+        //   //setViewPort(newView);
+        //   onMove(newView);
+        //   console.log('1111111111', newView);
+        // }}
+        //zoom={10}
       >
-        Maaaaaaaaap
-        <Marker />
+        <NavigationControl
+          position="bottom-right"
+          showCompass={true}
+          showZoom={true}
+          //style={mapStyles}
+        />
       </Map>
     </div>
   );
