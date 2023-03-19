@@ -3,10 +3,13 @@
  */
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import Map, { NavigationControl } from 'react-map-gl';
+import Map, { Marker } from 'react-map-gl';
+
+import 'mapbox-gl/dist/mapbox-gl.css';
 
 import Header from '../../components/header';
 //import Marker from '../../ui-kit/marker';
+
 import './styles.scss';
 
 import ChurchesListService from '../../services/churches';
@@ -52,27 +55,19 @@ const OPTIONS = [
 const REACT_APP_MAPBOX_ACCESS_TOKEN =
   'pk.eyJ1IjoibWFyaWEwMDAwMSIsImEiOiJjbGVuODN1Ym0wNHQ1M3RwYWIwaG9wZ282In0.mNhGxXBnFDmEd0lvjm2LtQ';
 
-// const mapStyles = {
-//   width: '100vw',
-//   height: '100vh',
-// };
-
 const MainPage = () => {
   const [currentCity, setCurrentCity] = useState(useSelector((store) => store.city));
+
+  const markersList = useSelector((store) => store.churchesList);
+
+  console.log(markersList);
 
   const [viewPort, setViewPort] = useState({
     latitude: 39.4408671,
     longitude: -99.5510316,
-    //...mapStyles,
   });
 
   const mapRef = React.useRef();
-
-  const onMapLoad = React.useCallback(() => {
-    mapRef.current.on('move', () => {
-      // do something
-    });
-  }, []);
 
   const getData = async (lat, long) => {
     try {
@@ -111,8 +106,7 @@ const MainPage = () => {
     return editedList;
   };
 
-  const dispatch = useDispatch();
-  //console.log(viewPort);
+  const dispatch = useDispatch(); // слушаем как изменяется зум и отправляем ещё один запрос, чтобы было больше точек издалека
 
   useEffect(() => {
     if (Number(currentCity)) {
@@ -122,25 +116,10 @@ const MainPage = () => {
       setViewPort({
         latitude: city.lat,
         longitude: city.long,
-        //zoom: 10,
-        //...mapStyles,
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentCity]);
-
-  // const onMove = (newView) => {
-  //   setTimeout(() => {
-  //     setViewPort({
-  //       //...newView,
-  //       latitude: newView.viewState.latitude,
-  //       longitude: newView.viewState.longitude,
-  //       ...mapStyles,
-  //       zoom: 10,
-  //     });
-  //   }, [100]);
-  //   //setViewPort({ ...newView, ...viewPort });
-  // };
 
   const onDrag = (newView) => {
     setTimeout(() => {
@@ -148,47 +127,40 @@ const MainPage = () => {
         latitude: newView.viewState.latitude,
         longitude: newView.viewState.longitude,
       });
+      //console.log(newView);
     }, [100]);
-    //setViewPort({ ...newView, ...viewPort });
   };
 
-  console.log(viewPort);
+  const onZoom = () => {};
+
+  //console.log(viewPort);
 
   return (
-    <div id="main-page">
+    <div id="--main-page">
       <Header currentCity={currentCity} setCurrentCity={setCurrentCity} citiesList={OPTIONS} />
-      <Map
-        mapboxAccessToken={REACT_APP_MAPBOX_ACCESS_TOKEN}
-        //style={mapStyles}
-        mapStyle="mapbox://styles/mapbox/streets-v9"
-        //initialViewState={viewPort}
-        {...viewPort}
-        ref={mapRef}
-        onLoad={onMapLoad}
-        initialViewState={{ zoom: 10 }}
-        onDrag={onDrag}
-        //showZoom={true}
-        //showCompass={true}
-        //viewState={viewPort}
-        // onViewPortChange={(newView) => {
-        //   console.log('wdjwiujdciuwehjnxoljks');
-        //   setViewPort(newView);
-        // }}
-        // onMove={(newView) => {
-        //   console.log('wdjwiujdciuwehjnxoljks');
-        //   //setViewPort(newView);
-        //   onMove(newView);
-        //   console.log('1111111111', newView);
-        // }}
-        //zoom={10}
-      >
-        <NavigationControl
-          position="bottom-right"
-          showCompass={true}
-          showZoom={true}
-          //style={mapStyles}
-        />
-      </Map>
+      <div className="map_container">
+        <Map
+          mapboxAccessToken={REACT_APP_MAPBOX_ACCESS_TOKEN}
+          mapStyle="mapbox://styles/mapbox/streets-v9"
+          {...viewPort}
+          ref={mapRef}
+          initialViewState={{ zoom: 10 }}
+          onDrag={onDrag}
+          width="100%"
+          height="100%"
+          onZoom={onZoom}
+        >
+          {markersList?.length &&
+            markersList.map((el) => {
+              console.log('11111111111skhdkjsndlskkds11111111111111');
+              return (
+                <Marker longitude={el.longitude} latitude={el.latitude} anchor="center" key={el.id}>
+                  <div className="AAA">A</div>
+                </Marker>
+              );
+            })}
+        </Map>
+      </div>
     </div>
   );
 };
