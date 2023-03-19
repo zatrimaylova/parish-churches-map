@@ -60,8 +60,6 @@ const MainPage = () => {
 
   const markersList = useSelector((store) => store.churchesList);
 
-  console.log(markersList);
-
   const [viewPort, setViewPort] = useState({
     latitude: 39.4408671,
     longitude: -99.5510316,
@@ -127,13 +125,10 @@ const MainPage = () => {
         latitude: newView.viewState.latitude,
         longitude: newView.viewState.longitude,
       });
-      //console.log(newView);
     }, [100]);
   };
 
   const onZoom = () => {};
-
-  //console.log(viewPort);
 
   return (
     <div id="--main-page">
@@ -152,7 +147,6 @@ const MainPage = () => {
         >
           {markersList?.length &&
             markersList.map((el) => {
-              console.log('11111111111skhdkjsndlskkds11111111111111');
               return (
                 <Marker longitude={el.longitude} latitude={el.latitude} anchor="center" key={el.id}>
                   <div className="AAA">A</div>
