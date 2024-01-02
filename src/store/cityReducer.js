@@ -1,4 +1,4 @@
-const defaultState = 0;
+const defaultState = 1;
 
 const CHANGE_CITY = 'CHANGE_CITY';
 

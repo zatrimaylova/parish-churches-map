@@ -61,8 +61,8 @@ const MainPage = () => {
   const markersList = useSelector((store) => store.churchesList);
 
   const [viewPort, setViewPort] = useState({
-    latitude: 39.4408671,
-    longitude: -99.5510316,
+    latitude: null,
+    longitude: null,
   });
 
   const mapRef = React.useRef();

@@ -18,7 +18,7 @@ export default class ChurchesListService {
   static async getChurchesListData(lat, long) {
     try {
       const req = await api.get(
-        `${URL}${this.#API_ENDPOINTS.churches}/?lat=${lat}&long=${long}&pg=2`,
+        `${URL}${this.#API_ENDPOINTS.churches}/?lat=${lat}&long=${long}&pg=1`,
         {
           headers: {
             'content-type': 'application/json',
@@ -30,6 +30,7 @@ export default class ChurchesListService {
         return Promise.reject(`Incorrect status ${req.status}`);
       }
 
+      console.log(req.parse);
       return req.json();
     } catch (error) {
       throw await error.response?.json();
