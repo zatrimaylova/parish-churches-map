@@ -1,0 +1,31 @@
+#header-root {
+  padding: 10px 40px;
+  display: flex;
+  justify-content: space-between;
+  //position: sticky;
+  //top: 0;
+  //left: 0;
+  //z-index: 10;
+  background-color: white;
+  //display: none;
+
+  .logo {
+    display: flex;
+    gap: 16px;
+    
+    > div {
+      width: fit-content;
+      
+      h1 {
+        line-height: 200%;
+        color: #18333E;
+      }
+    }
+  }
+
+  .city {
+    > div {
+      margin-top: 8px;
+    }
+  }
+}
