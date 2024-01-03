@@ -149,7 +149,7 @@ const MainPage = () => {
             markersList.map((el) => {
               return (
                 <Marker longitude={el.longitude} latitude={el.latitude} anchor="center" key={el.id}>
-                  <div className="AAA">A</div>
+                  <div className="marker" />
                 </Marker>
               );
             })}
