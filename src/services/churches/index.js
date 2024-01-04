@@ -15,10 +15,10 @@ export default class ChurchesListService {
     churches: 'Churchs',
   };
 
-  static async getChurchesListData(lat, long) {
+  static async getChurchesListData(lat, long, page = 1) {
     try {
       const req = await api.get(
-        `${URL}${this.#API_ENDPOINTS.churches}/?lat=${lat}&long=${long}&pg=1`,
+        `${URL}${this.#API_ENDPOINTS.churches}/?lat=${lat}&long=${long}&pg=${page}`,
         {
           headers: {
             'content-type': 'application/json',
