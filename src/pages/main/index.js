@@ -57,6 +57,7 @@ const REACT_APP_MAPBOX_ACCESS_TOKEN =
 
 const MainPage = () => {
   const [currentCity, setCurrentCity] = useState(useSelector((store) => store.city));
+  const [zoom, setZoom] = useState(14);
 
   const markersList = useSelector((store) => store.churchesList);
 
@@ -128,7 +129,10 @@ const MainPage = () => {
     }, [100]);
   };
 
-  const onZoom = () => {};
+  const onZoom = (zoom) => {
+    console.log(zoom);
+    setZoom(zoom);
+  };
 
   return (
     <div id="--main-page">
@@ -139,7 +143,7 @@ const MainPage = () => {
           mapStyle="mapbox://styles/mapbox/streets-v9"
           {...viewPort}
           ref={mapRef}
-          initialViewState={{ zoom: 10 }}
+          initialViewState={{ zoom: zoom }}
           onDrag={onDrag}
           width="100%"
           height="100%"
