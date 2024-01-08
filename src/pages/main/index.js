@@ -136,7 +136,6 @@ const MainPage = () => {
         latitude: city.lat,
         longitude: city.long,
       });
-      console.log(currentCity);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [String(currentCity)]);
@@ -152,9 +151,8 @@ const MainPage = () => {
     //   longitude: city.long,
     // });
     //}
-    console.log('ЮЗЭФФЕКТэ');
     const city = OPTIONS.find((el) => el.id === Number(currentCity));
-    console.log('city', city);
+
     if (!city.lat && !city.long) {
       return;
     }
@@ -164,7 +162,7 @@ const MainPage = () => {
     //getData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(viewPort)]);
-  //чыconsole.log();
+
   const onDrag = (newView) => {
     setTimeout(() => {
       setViewPort({
