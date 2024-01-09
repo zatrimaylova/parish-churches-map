@@ -62,7 +62,6 @@ const MarkerEl = (props) => {
         <div className="marker" />
       </Marker>
     );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.id, props.longitude, props.latitude]);
 };
 const MainPage = () => {
@@ -128,7 +127,7 @@ const MainPage = () => {
     if (Number(currentCity)) {
       const city = OPTIONS.find((el) => el.id === Number(currentCity));
       dispatch({ type: 'CHANGE_CITY', payload: Number(currentCity) });
-      //dispatch({ type: 'CLEAR_CHURCHES_LIST' });
+      dispatch({ type: 'CLEAR_CHURCHES_LIST' });
 
       //getData(city.lat, city.long);
       //getData(city.lat, city.long, 2);
@@ -158,10 +157,12 @@ const MainPage = () => {
     }
     for (let i = 1; i <= 4; ++i) {
       getData(city.lat, city.long, i);
+      console.log(i);
     }
+    //getData(city.lat, city.long, 1);
     //getData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [JSON.stringify(viewPort)]);
+  }, [currentCity]);
 
   const onDrag = (newView) => {
     setTimeout(() => {
@@ -209,6 +210,7 @@ const MainPage = () => {
         >
           {markersList?.length &&
             markersList.map((el) => {
+              console.log('!!!!!');
               return (
                 // <Marker longitude={el.longitude} latitude={el.latitude} anchor="center" key={el.id}>
                 //   <div className="marker" />

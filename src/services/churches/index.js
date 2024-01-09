@@ -30,7 +30,7 @@ export default class ChurchesListService {
         return Promise.reject(`Incorrect status ${req.status}`);
       }
 
-      console.log(req.parse);
+      console.log('req.parse', page);
       return req.json();
     } catch (error) {
       throw await error.response?.json();
