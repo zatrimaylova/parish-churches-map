@@ -1,7 +1,7 @@
 /**
  * @prettier
  */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Map, { Marker } from 'react-map-gl';
 
@@ -55,8 +55,19 @@ const OPTIONS = [
 const REACT_APP_MAPBOX_ACCESS_TOKEN =
   'pk.eyJ1IjoibWFyaWEwMDAwMSIsImEiOiJjbGVuODN1Ym0wNHQ1M3RwYWIwaG9wZ282In0.mNhGxXBnFDmEd0lvjm2LtQ';
 
+const MarkerEl = (props) => {
+  return useMemo(() => {
+    return (
+      <Marker longitude={props.longitude} anchor="center" latitude={props.latitude} key={props.id}>
+        <div className="marker" />
+      </Marker>
+    );
+  }, [props.id, props.longitude, props.latitude]);
+};
 const MainPage = () => {
   const [currentCity, setCurrentCity] = useState(useSelector((store) => store.city));
+  //const [page, setPage] = useState(1);
+  //const [zoom, setZoom] = useState(12);
 
   const markersList = useSelector((store) => store.churchesList);
 
@@ -66,14 +77,20 @@ const MainPage = () => {
   });
 
   const mapRef = React.useRef();
+  //const intervalRef = useRef(14);
 
-  const getData = async (lat, long) => {
+  const getData = async (lat, long, page = 1) => {
     try {
-      const result = await ChurchesListService.getChurchesListData(lat, long);
+      const page1 = await ChurchesListService.getChurchesListData(lat, long, page);
+      //const page2 = await ChurchesListService.getChurchesListData(lat, long, 2);
+      //const page3 = await ChurchesListService.getChurchesListData(lat, long, 3);
+      //const page4 = await ChurchesListService.getChurchesListData(lat, long, 4);
 
-      const listToStore = editChurchesList(result);
+      const listToStore = editChurchesList([...page1]);
 
       dispatch({ type: 'ADD_CHURCHES_lIST', payload: listToStore });
+      //CLEAR_CHURCHES
+      //dispatch({ type: 'CLEAR_CHURCHES_LIST'});
     } catch {
       return Promise.reject();
     }
@@ -109,13 +126,41 @@ const MainPage = () => {
   useEffect(() => {
     if (Number(currentCity)) {
       const city = OPTIONS.find((el) => el.id === Number(currentCity));
-      getData(city.lat, city.long);
       dispatch({ type: 'CHANGE_CITY', payload: Number(currentCity) });
+      dispatch({ type: 'CLEAR_CHURCHES_LIST' });
+
+      //getData(city.lat, city.long);
+      //getData(city.lat, city.long, 2);
       setViewPort({
         latitude: city.lat,
         longitude: city.long,
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [String(currentCity)]);
+
+  useEffect(() => {
+    //if (Number(currentCity)) {
+    //const city = OPTIONS.find((el) => el.id === Number(currentCity));
+    //dispatch({ type: 'CHANGE_CITY', payload: Number(currentCity) });
+    //getData(city.lat, city.long);
+    //getData(city.lat, city.long, 2);
+    // setViewPort({
+    //   latitude: city.lat,
+    //   longitude: city.long,
+    // });
+    //}
+    const city = OPTIONS.find((el) => el.id === Number(currentCity));
+
+    if (!city.lat && !city.long) {
+      return;
+    }
+    for (let i = 1; i <= 4; ++i) {
+      getData(city.lat, city.long, i);
+      console.log(i);
+    }
+    //getData(city.lat, city.long, 1);
+    //getData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentCity]);
 
@@ -128,7 +173,24 @@ const MainPage = () => {
     }, [100]);
   };
 
-  const onZoom = () => {};
+  // const onZoom = (zoom) => {
+  //   // console.log(
+  //   //   Math.floor(intervalRef.current) > Math.floor(zoom),
+  //   //   (Math.floor(intervalRef.current), Math.floor(zoom)),
+  //   // );
+  //   console.log(zoom.viewState.zoom);
+  //   //setZoom(zoom.viewState.zoom);
+  //   //setZoom(zoom);
+  //   //zoom;
+  //   //if (Math.floor(intervalRef.current) > Math.floor(zoom.viewState.zoom)) {
+  //   //intervalRef.current = Math.floor(zoom);
+  //   //setPage(page + 1);
+  //   //getData(city.lat, city.long, page);
+  //   //}
+  //   setTimeout(() => {
+  //     setZoom(zoom.viewState.zoom);
+  //   }, [1000]);
+  // };
 
   return (
     <div id="--main-page">
@@ -139,18 +201,26 @@ const MainPage = () => {
           mapStyle="mapbox://styles/mapbox/streets-v9"
           {...viewPort}
           ref={mapRef}
-          initialViewState={{ zoom: 10 }}
+          //initialViewState={{ zoom: zoom || 14 }}
+          initialViewState={{ zoom: 12 }}
           onDrag={onDrag}
           width="100%"
           height="100%"
-          onZoom={onZoom}
+          //onZoom={onZoom}
         >
           {markersList?.length &&
             markersList.map((el) => {
+              console.log('!!!!!');
               return (
-                <Marker longitude={el.longitude} latitude={el.latitude} anchor="center" key={el.id}>
-                  <div className="marker" />
-                </Marker>
+                // <Marker longitude={el.longitude} latitude={el.latitude} anchor="center" key={el.id}>
+                //   <div className="marker" />
+                // </Marker>
+                <MarkerEl
+                  longitude={el.longitude}
+                  latitude={el.latitude}
+                  anchor="center"
+                  id={`${el.id}${el.longitude}`}
+                />
               );
             })}
         </Map>
