@@ -77,20 +77,14 @@ const MainPage = () => {
   });
 
   const mapRef = React.useRef();
-  //const intervalRef = useRef(14);
 
   const getData = async (lat, long, page = 1) => {
     try {
       const page1 = await ChurchesListService.getChurchesListData(lat, long, page);
-      //const page2 = await ChurchesListService.getChurchesListData(lat, long, 2);
-      //const page3 = await ChurchesListService.getChurchesListData(lat, long, 3);
-      //const page4 = await ChurchesListService.getChurchesListData(lat, long, 4);
 
       const listToStore = editChurchesList([...page1]);
 
       dispatch({ type: 'ADD_CHURCHES_lIST', payload: listToStore });
-      //CLEAR_CHURCHES
-      //dispatch({ type: 'CLEAR_CHURCHES_LIST'});
     } catch {
       return Promise.reject();
     }
@@ -129,8 +123,6 @@ const MainPage = () => {
       dispatch({ type: 'CHANGE_CITY', payload: Number(currentCity) });
       dispatch({ type: 'CLEAR_CHURCHES_LIST' });
 
-      //getData(city.lat, city.long);
-      //getData(city.lat, city.long, 2);
       setViewPort({
         latitude: city.lat,
         longitude: city.long,
@@ -165,6 +157,7 @@ const MainPage = () => {
   }, [currentCity]);
 
   const onDrag = (newView) => {
+    console.log(newView);
     setTimeout(() => {
       setViewPort({
         latitude: newView.viewState.latitude,
@@ -201,7 +194,6 @@ const MainPage = () => {
           mapStyle="mapbox://styles/mapbox/streets-v9"
           {...viewPort}
           ref={mapRef}
-          //initialViewState={{ zoom: zoom || 14 }}
           initialViewState={{ zoom: 12 }}
           onDrag={onDrag}
           width="100%"
